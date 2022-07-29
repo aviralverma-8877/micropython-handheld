@@ -1,4 +1,6 @@
-import webserver, webrepl, lcd, time, esp, network
+import webrepl, lcd, time, esp, network
+from button_control import left_top, right_top, left_bottom, right_bottom, select
+
 from machine import UART
 esp.osdebug(None)
 def do_connect(uname, password):

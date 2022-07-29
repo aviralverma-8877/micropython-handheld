@@ -23,7 +23,6 @@ byte h = 48;
 
 void setup() {
   hx1230Init(2, 5, 4, 12, 13, 0, 0); // on the ATtiny85, I wired CE to ground, and BL to Vcc, so 3 pins are needed.
-  hx1230Backlight(1); // turn on backlight (if connected)
   hx1230Fill(0);      // erase display memory
   hx1230SetContrast(5);
   Serial.begin(115200);
@@ -96,16 +95,12 @@ void loop() {
       }
     }
   }
-  jsonBuffer.clear();
   if(digitalRead(BTN1) == HIGH)
   {
     if(lastPin != 1)
     {
       lastPin = 1;
-      jsonBuffer["a"] = "btn_pressed";
-      jsonBuffer["b"] = "Left Top";
-      serializeJson(jsonBuffer, Serial);
-      Serial.println();
+      Serial.println("left_top()");
     }
   }
   else if(digitalRead(BTN2) == HIGH)
@@ -113,10 +108,7 @@ void loop() {
     if(lastPin != 2)
     {
       lastPin = 2;
-      jsonBuffer["b"] = "Right Top";
-      jsonBuffer["a"] = "btn_pressed";
-      serializeJson(jsonBuffer, Serial);
-      Serial.println();
+      Serial.println("right_top()");
     }
   }
   else if(digitalRead(BTN3) == HIGH)
@@ -124,10 +116,7 @@ void loop() {
     if(lastPin != 3)
     {
       lastPin = 3;
-      jsonBuffer["b"] = "Left Bottom";
-      jsonBuffer["a"] = "btn_pressed";
-      serializeJson(jsonBuffer, Serial);
-      Serial.println();
+      Serial.println("left_bottom()");
     }
   }  
   else if(digitalRead(BTN4) == HIGH)
@@ -135,10 +124,7 @@ void loop() {
     if(lastPin != 4)
     {
       lastPin = 4;
-      jsonBuffer["b"] = "Right Bottom";
-      jsonBuffer["a"] = "btn_pressed";
-      serializeJson(jsonBuffer, Serial);
-      Serial.println();
+      Serial.println("right_bottom()");
     }
   }
   else if(digitalRead(BTN5) == HIGH)
@@ -146,10 +132,7 @@ void loop() {
     if(lastPin != 5)
     {
       lastPin = 5;
-      jsonBuffer["b"] = "Select";
-      jsonBuffer["a"] = "btn_pressed";
-      serializeJson(jsonBuffer, Serial);
-      Serial.println();
+      Serial.println("select()");
     }
   }
   else
