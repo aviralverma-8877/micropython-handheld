@@ -36,8 +36,8 @@ void setup() {
   delay(500);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void serial_check()
+{
   if(Serial.available())
   {
     serialData = Serial.readStringUntil('\n');
@@ -95,6 +95,10 @@ void loop() {
       }
     }
   }
+}
+
+void button_check()
+{
   if(digitalRead(BTN1) == HIGH)
   {
     if(lastPin != 1)
@@ -139,6 +143,12 @@ void loop() {
   {
     lastPin = 0;
   }
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  serial_check();
+  button_check();
 }
 
 void clearLCD()
