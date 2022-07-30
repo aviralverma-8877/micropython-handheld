@@ -1,8 +1,16 @@
-import lcd
+import lcd, functions
 
 def left_top():
     lcd.clear_display()
-    lcd.display("left_top", 0)
+    lcd.display("Scanning...", 0)
+    networks = functions.scan_network()
+    j=0
+    lcd.clear_display()
+    for i in networks:
+        lcd.display(str(i[0].decode("utf-8")), j)
+        j = j+1
+        if(j > 7):
+            break
 
 def right_top():
     lcd.clear_display()
