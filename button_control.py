@@ -1,4 +1,7 @@
 import lcd, functions
+from webserver import WebServer
+
+web_server = WebServer()
 
 def left_top():
     lcd.clear_display()
@@ -14,7 +17,9 @@ def left_top():
 
 def right_top():
     lcd.clear_display()
-    lcd.display("right_top", 0)
+    lcd.display("web server", 0)
+    lcd.display("Started...", 1)
+    web_server.start_web_server()
 
 def left_bottom():
     lcd.clear_display()
