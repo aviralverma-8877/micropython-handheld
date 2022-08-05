@@ -1,5 +1,5 @@
 import time
-delay = 0.05
+delay = 0.1
 def display(message, line):
     data = {
         "m":message,

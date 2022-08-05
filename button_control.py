@@ -2,6 +2,7 @@ import lcd, functions
 from webserver import WebServer
 
 web_server = WebServer()
+bkled = True
 
 def left_top():
     lcd.clear_display()
@@ -22,8 +23,16 @@ def right_top():
     web_server.start_web_server()
 
 def left_bottom():
+    global bkled
     lcd.clear_display()
-    lcd.display("left_bottom", 0)
+    if bkled:
+        lcd.turn_off_bkled()
+        lcd.display("BKLED OFF", 0)
+        bkled = False
+    else:
+        lcd.turn_on_bkled()
+        lcd.display("BKLED ON", 0)
+        bkled = True
 
 def right_bottom():
     lcd.clear_display()
