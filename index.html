@@ -70,6 +70,10 @@
                 httpGet("/?led=on")
             }
         }
+        function display(msg)
+        {
+            
+        }
         function turn_off_server()
         {
             document.getElementById("server_state").innerHTML="Server Stopped"
@@ -83,5 +87,8 @@
         <p>BKLED state: <strong id="state">ON</strong></p>
         <p><a href="#" onclick="toggle_bkled()"><button class="button button-off" id="button">OFF</button></a></p>
         <p><a href="#" onclick="turn_off_server()"><button class="button button3" id="server_state">Stop Server</button></a></p>
+        <p>
+            <textarea rows="9" cols="12" placeholder="Type here to display on LCD..." onchange="display(this.innerHeight)"></textarea>
+        </p>
     </body>
 </html>
