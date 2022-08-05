@@ -2,9 +2,86 @@
     <head>
         <title>Simple web server</title>
     </head>
+    <style>
+        html{
+            font-family: Helvetica;
+            display:inline-block;
+            margin: 0px auto;
+            text-align: center;
+        }
+        
+        h1{
+            color: #0F3376;
+            padding: 2vh;
+        }
+        p{
+            font-size: 1.5rem;
+        }
+        
+        .button{
+            display: inline-block;
+            border: none; 
+            border-radius: 4px;
+            color: white;
+            padding: 16px 40px;
+            text-decoration: none;
+            font-size: 30px;
+            margin: 2px;
+            cursor: pointer;
+        }
+        .button-on{
+            background-color: #e7bd3b;
+        }
+        .button-off{
+            background-color: #4286f4;
+        }
+        
+        .button3{
+            background-color: #42adf5;
+        }
+    </style>
+    <script>
+        function httpGet(theUrl)
+        {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+            xmlHttp.send( null );
+            return xmlHttp.responseText;
+        }
+        var bkled_state = true;
+        function toggle_bkled()
+        {
+            if(bkled_state)
+            {
+                document.getElementById("state").innerHTML="OFF"
+                document.getElementById("button").innerHTML="ON"
+                document.getElementById("button").classList.remove("button-off");
+                document.getElementById("button").classList.add("button-on");
+                bkled_state = false
+                httpGet("/?led=off")
+            }
+            else
+            {
+                document.getElementById("state").innerHTML="ON"
+                document.getElementById("button").innerHTML="OFF"
+                document.getElementById("button").classList.remove("button-on");
+                document.getElementById("button").classList.add("button-off");
+                bkled_state = true
+                httpGet("/?led=on")
+            }
+        }
+        function turn_off_server()
+        {
+            document.getElementById("server_state").innerHTML="Server Stopped"
+            setTimeout(function(){
+                httpGet("/?server=off")
+            },1);
+        }
+    </script>
     <body>
-        <h1>
-            Welcome to Micro Python!
-        </h1>
+        <h1>ESP Web Server</h1>
+        <p>BKLED state: <strong id="state">ON</strong></p>
+        <p><a href="#" onclick="toggle_bkled()"><button class="button button-off" id="button">OFF</button></a></p>
+        <p><a href="#" onclick="turn_off_server()"><button class="button button3" id="server_state">Stop Server</button></a></p>
     </body>
 </html>
