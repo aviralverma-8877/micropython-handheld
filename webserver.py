@@ -1,4 +1,4 @@
-import socket, lcd
+import socket, lcd, functions
 
 class WebServer:
     def __init__(self):
@@ -29,6 +29,7 @@ class WebServer:
             led_on = request.find('/?led=on')
             led_off = request.find('/?led=off')
             server_off = request.find('/?server=off')
+            print_into = request.find('/?welcome')
             if led_on == 6:
                 self.bkled_state = True
                 lcd.clear_display()
@@ -45,6 +46,8 @@ class WebServer:
                 lcd.clear_display()
                 lcd.display("Server Stopped...", 0)
                 break
+            if print_into == 6:
+                functions.print_intro()
             response = self.web_page()
             conn.send('HTTP/1.1 200 OK\n')
             conn.send('Content-Type: text/html\n')
