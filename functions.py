@@ -29,6 +29,15 @@ def init_uart():
     uart = UART(0, baudrate=115200)
     uart.init()
 
+def gps_data(time, status, latitud, latitudHemisphere, longitud, longitudMeridiano, speedKnots, trackAngle, date, magneticVariation, magneticVariationOrientation):
+    lcd.clear_display()
+    lcd.display("Time : "+time, 0)
+    lcd.display("status : "+status, 1)
+    lcd.display("Latitud : "+latitud, 2)
+    lcd.display("Longitud : "+longitud, 3)
+    lcd.display("Date : "+date, 4)
+    lcd.display("Speed : "+speedKnots, 5)
+
 def print_intro(ip_config):
     print("\n")
     lcd.set_contrast(5)
