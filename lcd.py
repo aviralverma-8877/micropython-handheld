@@ -43,3 +43,11 @@ def alert():
     }
     print(data)
     time.sleep(delay)
+
+def get_gps():
+    time.sleep(delay)
+    data = {
+        "c":5
+    }
+    print(data)
+    time.sleep(delay)
