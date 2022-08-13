@@ -1,15 +1,23 @@
 #include <ArduinoJson.h>
 #include <bb_hx1230.h>
+#include <SoftwareSerial.h>
+#include <Gpsneo.h>
 
+const byte rxPin = 4;
+const byte txPin = 11;
 String serialData;
+
+char latitud[11];
+char latitudHemisphere[3];
+char longitud[11];
+char longitudMeridiano[3];
+
+Gpsneo gps(rxPin,txPin);
+
 byte lastPin = 0;
-// Software SPI (slower updates, more flexible pin options):
-// pin 4 - Serial clock out (SCLK)
-// pin 5 - Serial data out (DIN)
-// pin 6 - Data/Command select (D/C)
-// pin 7 - LCD chip select (CS)
-// pin 8 - LCD reset (RST)
-DynamicJsonDocument jsonBuffer(1000);
+
+DynamicJsonDocument jsonBuffer(300);
+SoftwareSerial myGPS(rxPin, txPin); // RX, TX
 
 #define bkled 5
 #define BTN1 6
@@ -22,33 +30,33 @@ byte w = 84;
 byte h = 48;
 
 void setup() {
-  hx1230Init(2, 5, 4, 12, 13, 0, 0); // on the ATtiny85, I wired CE to ground, and BL to Vcc, so 3 pins are needed.
+  hx1230Init(2, 5, 3, 12, 13, 0, 0); // on the ATtiny85, I wired CE to ground, and BL to Vcc, so 3 pins are needed.
   hx1230Fill(0);      // erase display memory
   hx1230SetContrast(5);
   Serial.begin(115200);
+  Serial.setTimeout(2);
+  myGPS.begin(9600);
   pinMode(bkled, OUTPUT);
-  digitalWrite(bkled, HIGH);
+  hx1230Backlight(1);
   pinMode(BTN1, INPUT);
   pinMode(BTN2, INPUT);
   pinMode(BTN3, INPUT);
   pinMode(BTN4, INPUT);
   pinMode(BTN5, INPUT);
-  delay(500);
 }
 
 void serial_check()
 {
   if(Serial.available())
   {
-    serialData = Serial.readStringUntil('\n');
-    serialData.trim();
+    serialData = Serial.readString();
     Serial.flush();
+    serialData.trim();
     jsonBuffer.clear();
     DeserializationError error = deserializeJson(jsonBuffer, serialData);
     if (error) {
       return;
-    }
-
+    }  
     if(jsonBuffer.containsKey("c"))
     {
       int cmd;
@@ -58,10 +66,10 @@ void serial_check()
           clearLCD();
           break;
         case 1:
-          digitalWrite(bkled, LOW);
+          hx1230Backlight(0);
           break;
         case 2:
-          digitalWrite(bkled, HIGH);
+          hx1230Backlight(1);
           break;
         case 3:
           if(jsonBuffer.containsKey("v"))
@@ -73,11 +81,14 @@ void serial_check()
         case 4:
           for(int i=0; i<5; i++)
           {
-            digitalWrite(bkled, !digitalRead(bkled));
+            hx1230Backlight(0);
             delay(100);
-            digitalWrite(bkled, !digitalRead(bkled));
+            hx1230Backlight(1);
             delay(100);
           }
+          break;
+        case 5:
+          gps_data();
           break;
         default:
           lcdDisplay("Unknown CMD", 0);
@@ -97,10 +108,28 @@ void serial_check()
   }
 }
 
+void gps_data()
+{
+  gps.getDataGPRMC( latitud,
+                    latitudHemisphere,
+                    longitud,
+                    longitudMeridiano);
+  Serial.print("gps_data('");
+  Serial.print(latitud);
+  Serial.print("','");
+  Serial.print(longitud);
+  Serial.println("')");
+  lcdDisplay("Latitude:",0);
+  lcdDisplay(latitud,1);
+  lcdDisplay("Longitude:",2);
+  lcdDisplay(longitud,3);
+}
+
 void button_check()
 {
   if(digitalRead(BTN1) == HIGH)
   {
+    delay(10);
     if(lastPin != 1)
     {
       lastPin = 1;
@@ -109,6 +138,7 @@ void button_check()
   }
   else if(digitalRead(BTN2) == HIGH)
   {
+    delay(10);
     if(lastPin != 2)
     {
       lastPin = 2;
@@ -117,6 +147,7 @@ void button_check()
   }
   else if(digitalRead(BTN3) == HIGH)
   {
+    delay(10);
     if(lastPin != 3)
     {
       lastPin = 3;
@@ -125,6 +156,7 @@ void button_check()
   }  
   else if(digitalRead(BTN4) == HIGH)
   {
+    delay(10);
     if(lastPin != 4)
     {
       lastPin = 4;
@@ -133,21 +165,21 @@ void button_check()
   }
   else if(digitalRead(BTN5) == HIGH)
   {
+    delay(10);
     if(lastPin != 5)
     {
       lastPin = 5;
-      Serial.println("select()");
+      gps_data();
     }
   }
   else
   {
     lastPin = 0;
+    serial_check();
   }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  serial_check();
   button_check();
 }
 

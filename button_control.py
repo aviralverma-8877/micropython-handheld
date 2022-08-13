@@ -1,4 +1,4 @@
-import lcd, functions
+import lcd, functions, json
 from webserver import WebServer
 
 web_server = WebServer()
@@ -35,9 +35,13 @@ def left_bottom():
         bkled = True
 
 def right_bottom():
-    lcd.clear_display()
-    lcd.display("right_bottom", 0)
+    f = open("config.json")
+    config = json.load(f)
+    ip_config = functions.do_connect(config["wifi"]["ssid"], config["wifi"]["pass"])
+    functions.print_intro(ip_config)
 
 def select():
     lcd.clear_display()
-    lcd.display("select", 0)
+    lcd.display("Connecting to", 0)
+    lcd.display("GPS",1)
+    lcd.get_gps()

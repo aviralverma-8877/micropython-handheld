@@ -1,4 +1,4 @@
-import socket, lcd, functions
+import socket, lcd, functions, json
 
 class WebServer:
     def __init__(self):
@@ -22,10 +22,8 @@ class WebServer:
     def start_web_server(self):
         while True:
             conn, addr = self.s.accept()
-            print('Got a connection from %s' % str(addr))
             request = conn.recv(1024)
             request = str(request)
-            print('Content = %s' % request)
             led_on = request.find('/?led=on')
             led_off = request.find('/?led=off')
             server_off = request.find('/?server=off')
@@ -35,19 +33,20 @@ class WebServer:
                 lcd.clear_display()
                 lcd.turn_on_bkled()
                 lcd.display("BKLED ON", 0)
-                print('BKLED ON')
             if led_off == 6:
                 lcd.clear_display()
                 lcd.turn_off_bkled()
                 lcd.display("BKLED OFF", 0)
                 self.bkled_state = False
-                print('BKLED OFF')
             if server_off == 6:
                 lcd.clear_display()
                 lcd.display("Server Stopped...", 0)
                 break
             if print_into == 6:
-                functions.print_intro()
+                f = open("config.json")
+                config = json.load(f)
+                ip_config = functions.do_connect(config["wifi"]["ssid"], config["wifi"]["pass"])
+                functions.print_intro(ip_config)
             response = self.web_page()
             conn.send('HTTP/1.1 200 OK\n')
             conn.send('Content-Type: text/html\n')

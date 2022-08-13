@@ -1,8 +1,11 @@
-import webrepl, lcd, time, functions
+import webrepl, functions, json
 from button_control import left_top, right_top, left_bottom, right_bottom, select
+from functions import gps_data
 
 webrepl.start()
-ip_config = functions.do_connect('Airtel_B403', 'airtelb403')
+f = open("config.json")
+config = json.load(f)
+ip_config = functions.do_connect(config["wifi"]["ssid"], config["wifi"]["pass"])
 functions.init_uart()
 functions.print_intro(ip_config)
 
