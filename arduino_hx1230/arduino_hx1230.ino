@@ -7,10 +7,17 @@ const byte rxPin = 4;
 const byte txPin = 11;
 String serialData;
 
+char time[10];
+char status[3];
 char latitud[11];
 char latitudHemisphere[3];
 char longitud[11];
 char longitudMeridiano[3];
+char speedKnots[10];
+char trackAngle[8];
+char date[10];
+char magneticVariation[10];
+char magneticVariationOrientation[3];
 
 Gpsneo gps(rxPin,txPin);
 
@@ -91,7 +98,9 @@ void serial_check()
           gps_data();
           break;
         default:
+          clearLCD();
           lcdDisplay("Unknown CMD", 0);
+          break;
       }
     }
     if(jsonBuffer.containsKey("m"))
@@ -110,19 +119,37 @@ void serial_check()
 
 void gps_data()
 {
-  gps.getDataGPRMC( latitud,
+  clearLCD();
+  lcdDisplay("Fetching",0);
+  lcdDisplay("GPS",1);
+  gps.getDataGPRMC(time,
+                    status,
+                    latitud,
                     latitudHemisphere,
                     longitud,
-                    longitudMeridiano);
+                    longitudMeridiano,
+                    speedKnots,
+                    trackAngle,
+                    date,
+                    magneticVariation,
+                    magneticVariationOrientation);
   Serial.print("gps_data('");
+  Serial.print(status);
+  Serial.print("','");
   Serial.print(latitud);
   Serial.print("','");
   Serial.print(longitud);
+  Serial.print("','");
+  Serial.print(time);
+  Serial.print("','");
+  Serial.print(date);
   Serial.println("')");
-  lcdDisplay("Latitude:",0);
+  clearLCD();
+  lcdDisplay(status,0);
   lcdDisplay(latitud,1);
-  lcdDisplay("Longitude:",2);
-  lcdDisplay(longitud,3);
+  lcdDisplay(longitud,2);
+  lcdDisplay(time,3);
+  lcdDisplay(date,4);
 }
 
 void button_check()
