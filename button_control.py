@@ -39,9 +39,3 @@ def right_bottom():
     config = json.load(f)
     ip_config = functions.do_connect(config["wifi"]["ssid"], config["wifi"]["pass"])
     functions.print_intro(ip_config)
-
-def select():
-    lcd.clear_display()
-    lcd.display("Connecting to", 0)
-    lcd.display("GPS",1)
-    lcd.get_gps()

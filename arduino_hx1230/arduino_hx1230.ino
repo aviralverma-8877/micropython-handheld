@@ -1,30 +1,18 @@
 #include <ArduinoJson.h>
 #include <bb_hx1230.h>
 #include <SoftwareSerial.h>
-#include <Gpsneo.h>
 
+#define SERIAL_BUFFER_SIZE 256
 const byte rxPin = 4;
 const byte txPin = 11;
+
 String serialData;
-
-char time[10];
-char status[3];
-char latitud[11];
-char latitudHemisphere[3];
-char longitud[11];
-char longitudMeridiano[3];
-char speedKnots[10];
-char trackAngle[8];
-char date[10];
-char magneticVariation[10];
-char magneticVariationOrientation[3];
-
-Gpsneo gps(rxPin,txPin);
+String gpsData;
 
 byte lastPin = 0;
 
-DynamicJsonDocument jsonBuffer(300);
-SoftwareSerial myGPS(rxPin, txPin); // RX, TX
+StaticJsonDocument<1000> jsonBuffer;
+SoftwareSerial GPS_serial(rxPin, txPin); // RX, TX
 
 #define bkled 5
 #define BTN1 6
@@ -40,11 +28,13 @@ void setup() {
   hx1230Init(2, 5, 3, 12, 13, 0, 0); // on the ATtiny85, I wired CE to ground, and BL to Vcc, so 3 pins are needed.
   hx1230Fill(0);      // erase display memory
   hx1230SetContrast(5);
+  
   Serial.begin(115200);
-  Serial.setTimeout(2);
-  myGPS.begin(9600);
+  
+  GPS_serial.begin(9600);
+
   pinMode(bkled, OUTPUT);
-  hx1230Backlight(1);
+  digitalWrite(bkled,HIGH);
   pinMode(BTN1, INPUT);
   pinMode(BTN2, INPUT);
   pinMode(BTN3, INPUT);
@@ -52,12 +42,34 @@ void setup() {
   pinMode(BTN5, INPUT);
 }
 
+void gps_data()
+{
+  if(GPS_serial.available())
+  {
+    while(GPS_serial.available())
+    {
+      GPS_serial.read();
+    }
+  }
+  while(!GPS_serial.available()){;}
+  gpsData = "";
+  while(GPS_serial.available())
+  {
+      gpsData = GPS_serial.readStringUntil('\n');
+      gpsData.trim();
+      Serial.print("gps_data('");
+      Serial.print(gpsData);
+      Serial.println("')");
+  }
+}
+
 void serial_check()
 {
   if(Serial.available())
   {
-    serialData = Serial.readString();
-    Serial.flush();
+    serialData = Serial.readStringUntil('\n');
+    while(Serial.available())
+      char r = Serial.read();
     serialData.trim();
     jsonBuffer.clear();
     DeserializationError error = deserializeJson(jsonBuffer, serialData);
@@ -68,15 +80,16 @@ void serial_check()
     {
       int cmd;
       cmd = int(jsonBuffer["c"]);
+      Serial.println(cmd);
       switch(cmd){
         case 0:
           clearLCD();
           break;
         case 1:
-          hx1230Backlight(0);
+          digitalWrite(bkled,LOW);
           break;
         case 2:
-          hx1230Backlight(1);
+          digitalWrite(bkled,HIGH);
           break;
         case 3:
           if(jsonBuffer.containsKey("v"))
@@ -88,14 +101,11 @@ void serial_check()
         case 4:
           for(int i=0; i<5; i++)
           {
-            hx1230Backlight(0);
+            digitalWrite(bkled,!digitalRead(bkled));
             delay(100);
-            hx1230Backlight(1);
+            digitalWrite(bkled,!digitalRead(bkled));
             delay(100);
           }
-          break;
-        case 5:
-          gps_data();
           break;
         default:
           clearLCD();
@@ -115,41 +125,6 @@ void serial_check()
       }
     }
   }
-}
-
-void gps_data()
-{
-  clearLCD();
-  lcdDisplay("Fetching",0);
-  lcdDisplay("GPS",1);
-  gps.getDataGPRMC(time,
-                    status,
-                    latitud,
-                    latitudHemisphere,
-                    longitud,
-                    longitudMeridiano,
-                    speedKnots,
-                    trackAngle,
-                    date,
-                    magneticVariation,
-                    magneticVariationOrientation);
-  Serial.print("gps_data('");
-  Serial.print(status);
-  Serial.print("','");
-  Serial.print(latitud);
-  Serial.print("','");
-  Serial.print(longitud);
-  Serial.print("','");
-  Serial.print(time);
-  Serial.print("','");
-  Serial.print(date);
-  Serial.println("')");
-  clearLCD();
-  lcdDisplay(status,0);
-  lcdDisplay(latitud,1);
-  lcdDisplay(longitud,2);
-  lcdDisplay(time,3);
-  lcdDisplay(date,4);
 }
 
 void button_check()
@@ -208,6 +183,7 @@ void button_check()
 
 void loop() {
   button_check();
+  delay(1);
 }
 
 void clearLCD()
