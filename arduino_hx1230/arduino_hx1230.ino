@@ -80,7 +80,6 @@ void serial_check()
     {
       int cmd;
       cmd = int(jsonBuffer["c"]);
-      Serial.println(cmd);
       switch(cmd){
         case 0:
           clearLCD();

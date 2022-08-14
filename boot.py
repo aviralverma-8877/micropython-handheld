@@ -1,5 +1,5 @@
 import webrepl, functions, json
-from button_control import left_top, right_top, left_bottom, right_bottom, select
+from button_control import left_top, right_top, left_bottom, right_bottom
 from functions import gps_data
 
 webrepl.start()
