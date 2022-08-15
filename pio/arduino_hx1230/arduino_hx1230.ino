@@ -10,7 +10,7 @@ String gpsData;
 
 byte lastPin = 0;
 
-StaticJsonDocument<200> jsonBuffer;
+StaticJsonDocument<1000> jsonBuffer;
 SoftwareSerial GPS_serial(rxPin, txPin); // RX, TX
 
 #define bkled 5
@@ -52,15 +52,17 @@ void gps_data()
   }
   while(!GPS_serial.available()){;}
   gpsData = "";
+  jsonBuffer.clear();
+  jsonBuffer["action"] = "gps_data";
+  JsonArray data = jsonBuffer.createNestedArray("value");
   while(GPS_serial.available())
   {
       gpsData = GPS_serial.readStringUntil('\n');
       gpsData.trim();
-      Serial.print("gps_data('");
-      Serial.print(gpsData);
-      Serial.println("')");
+      data.add(gpsData);
   }
-  lcdDisplay(gpsData.c_str(),7);
+  serializeJson(jsonBuffer, Serial);
+  Serial.println();
 }
 
 void serial_check()
@@ -120,6 +122,9 @@ void controller(String command)
           digitalWrite(bkled,!digitalRead(bkled));
           delay(100);
         }
+        break;
+      case 4:
+        gps_data();
         break;
       default:
         clearLCD();

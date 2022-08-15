@@ -57,11 +57,10 @@ void read_serial_inputs()
             if(doc.containsKey("value"))
             {
                 String action = doc["action"];
-                String value = doc["value"];
                 print_debug("DEBUG",action);
-                print_debug("DEBUG",value);
                 if(action.equals(String("botton_press")))
                 {
+                    String value = doc["value"];
                     if(value.equals("top_right"))
                     {
                         top_right(value);
@@ -85,6 +84,7 @@ void read_serial_inputs()
                 }
                 if(action.equals(String("gps_data")))
                 {
+                    DynamicJsonDocument value = doc["value"];
                     process_nmea(value);
                 }
             }
@@ -152,7 +152,6 @@ void setup_web_server()
             print_debug("ERROR","Index not found");
         index.close();
     });
-    serv
     server.serveStatic("/script.js", SPIFFS, "/script.js");
     initWebSocket();
     server.addHandler(new CaptiveRequestHandler()).setFilter(ON_AP_FILTER);

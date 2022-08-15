@@ -8,6 +8,7 @@
     #include <ESPAsyncTCP.h>
     #include <ESPAsyncWebServer.h>
     #include <ESP8266mDNS.h> 
+    #include <TinyGPSPlus.h>
 
     #include "functions.h"
     #include "button_control.h"
@@ -24,5 +25,6 @@
     extern AsyncWebServer server;
     extern DNSServer dnsServer;
     extern AsyncWebSocket webSocket;
+    extern TinyGPSPlus gps;
 #endif // MACRO
 

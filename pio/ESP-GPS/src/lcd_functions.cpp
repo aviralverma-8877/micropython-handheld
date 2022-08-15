@@ -42,6 +42,14 @@ void alert_lcd()
     Serial.println();
 }
 
+void get_gps_data()
+{
+    DynamicJsonDocument doc(200);
+    doc["c"] = 4;
+    serializeJson(doc, Serial);
+    Serial.println();
+}
+
 void print_intro()
 {
     set_lcd_contrast(5);
