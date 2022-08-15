@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"name": "ESP-GPS",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"button_control.h": "c",
+			"global_var.h": "c"
+		}
+	}
+}

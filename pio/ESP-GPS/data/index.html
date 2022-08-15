@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>
+            NEO-6M Logger
+        </title>
+    </head>
+    <script type="application/javascript" src="script.js"></script>
+    <body onload="init_socket()">
+        <h1>
+            NEO-6M Logger
+        </h1>
+        <hr>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        WiFi SSID:
+                    </td>
+                    <td>
+                        <input type="text" id="wifi_ssid" placeholder="SSID" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        WiFi Password:
+                    </td>
+                    <td>
+                        <input type="password" id="wifi_psk" placeholder="PSK" />
+                    </td>
+                </tr>
+            </table>
+            <button id="save_wifi" onclick="send_wifi_cred()">Save</button>
+        </div>
+    </body>
+</html>
