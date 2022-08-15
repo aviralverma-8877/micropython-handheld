@@ -61,6 +61,7 @@ void gps_data()
       Serial.print(gpsData);
       Serial.println("')");
   }
+  lcdDisplay(gpsData.c_str(),7);
 }
 
 void serial_check()
@@ -68,8 +69,6 @@ void serial_check()
   if(Serial.available())
   {
     serialData = Serial.readStringUntil('\n');
-    while(Serial.available())
-      char r = Serial.read();
     serialData.trim();
     jsonBuffer.clear();
     DeserializationError error = deserializeJson(jsonBuffer, serialData);
@@ -85,19 +84,16 @@ void serial_check()
           clearLCD();
           break;
         case 1:
-          digitalWrite(bkled,LOW);
+          digitalWrite(bkled,!digitalRead(bkled));
           break;
         case 2:
-          digitalWrite(bkled,HIGH);
-          break;
-        case 3:
           if(jsonBuffer.containsKey("v"))
           {
             int v = int(jsonBuffer["v"]);
             hx1230SetContrast(v);
           }
           break;
-        case 4:
+        case 3:
           for(int i=0; i<5; i++)
           {
             digitalWrite(bkled,!digitalRead(bkled));
