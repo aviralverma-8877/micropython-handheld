@@ -28,4 +28,5 @@ void bottom_right(String value)
 void select(String value)
 {
     print_debug("DEBUG","select");
+    get_gps_data();
 }

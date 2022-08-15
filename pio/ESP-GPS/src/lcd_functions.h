@@ -7,4 +7,5 @@
     void set_lcd_contrast(int value);
     void alert_lcd();
     void print_intro();
+    void get_gps_data();
 #endif
