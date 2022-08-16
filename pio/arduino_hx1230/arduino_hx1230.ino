@@ -10,7 +10,7 @@ String gpsData;
 
 byte lastPin = 0;
 
-StaticJsonDocument<1000> jsonBuffer;
+DynamicJsonDocument jsonBuffer(500);
 SoftwareSerial GPS_serial(rxPin, txPin); // RX, TX
 
 #define bkled 5
@@ -31,7 +31,8 @@ void setup() {
   Serial.begin(9600);
   Serial.setTimeout(5);
   GPS_serial.begin(9600);
-
+  GPS_serial.setTimeout(5);
+  
   pinMode(bkled, OUTPUT);
   digitalWrite(bkled,HIGH);
   pinMode(BTN1, INPUT);
@@ -45,38 +46,39 @@ void gps_data()
 {
   if(GPS_serial.available())
   {
-    while(GPS_serial.available())
-    {
-      GPS_serial.read();
-    }
+    while(GPS_serial.available()){GPS_serial.read();}
   }
   while(!GPS_serial.available()){;}
+  delay(10);
   gpsData = "";
   jsonBuffer.clear();
   jsonBuffer["action"] = "gps_data";
-  JsonArray data = jsonBuffer.createNestedArray("value");
   while(GPS_serial.available())
   {
-      gpsData = GPS_serial.readStringUntil('\n');
-      gpsData.trim();
-      data.add(gpsData);
+    gpsData = GPS_serial.readString();
+    gpsData.trim();
   }
+  jsonBuffer["value"] = gpsData;
   serializeJson(jsonBuffer, Serial);
   Serial.println();
+  while(GPS_serial.available()){GPS_serial.read();}
 }
 
 void serial_check()
 {
   if(Serial.available())
   {
-    serialData = Serial.readString();
+    serialData = "";
+    while(Serial.available())
+    {
+      serialData += Serial.readString();
+    }
     serialData.trim();
     String command = "";
     for(int i=0; i<serialData.length(); i++)
     {
       if(serialData[i] == '\n')
       {
-        
         controller(command);
         command = "";
       }

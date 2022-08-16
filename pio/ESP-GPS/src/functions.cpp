@@ -84,7 +84,7 @@ void read_serial_inputs()
                 }
                 if(action.equals(String("gps_data")))
                 {
-                    DynamicJsonDocument value = doc["value"];
+                    String value = doc["value"];
                     process_nmea(value);
                 }
             }

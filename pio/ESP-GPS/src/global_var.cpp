@@ -1,7 +1,8 @@
 #include "global_var.h"
 
-Ticker TickerForSerial;
+Ticker TickerForGPS;
 bool debug_mode = false;
+bool gps_recording = false;
 WiFiEventHandler wifiConnectHandler;
 WiFiEventHandler wifiDisconnectHandler;
 IPAddress apIP(192, 168, 4, 1);

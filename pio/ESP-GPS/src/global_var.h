@@ -15,8 +15,9 @@
     #include "gps_control.h"
     #include "lcd_functions.h"
     
-    extern Ticker TickerForSerial;
+    extern Ticker TickerForGPS;
     extern bool debug_mode;
+    extern bool gps_recording;
     extern WiFiEventHandler wifiConnectHandler;
     extern WiFiEventHandler wifiDisconnectHandler;
     extern IPAddress apIP;
