@@ -1,43 +1,43 @@
 #include "gps_control.h"
 
-void process_nmea(String value)
+void process_nmea(DynamicJsonDocument value)
 {
     clear_lcd();
     print_lcd("GPS Data",0);
-    print_debug("DEBUG",value);
-    for(char r:value)
+    if (value.containsKey("lat"))
     {
-        if(gps.encode(r))
-            displayGPSInfo();
-    }
-}
-
-void displayGPSInfo()
-{
-    if (gps.location.isValid())
-    {
-        print_lcd("Location:", 1);
-        print_lcd(String(gps.location.lat()), 2);
-        print_lcd(String(gps.location.lng()), 3);
+        if (value.containsKey("lng"))
+        {
+            print_lcd("Location:", 1);
+            print_lcd("Lat : "+String(value["lat"]), 2);
+            print_lcd("Lng : "+String(value["lng"]), 3);
+        }
     }
 
-    if (gps.date.isValid())
+    if (value.containsKey("day"))
     {
-        String date_val = String(gps.date.day())+"/"+String(gps.date.month())+"/"+String(gps.date.year());
-        print_lcd("Date:", 4);
-        print_lcd(date_val, 5);
+        if (value.containsKey("month"))
+        {
+            if (value.containsKey("year"))
+            {
+                String date_val = String(value["day"])+"/"+String(value["month"])+"/"+String(value["year"]);
+                print_lcd("Date:", 4);
+                print_lcd(date_val, 5);
+            }
+        }
     }
 
-    if (gps.time.isValid())
+
+    if (value.containsKey("hour"))
     {
-        String time_val = String(gps.time.hour())+":"+String(gps.time.minute())+":"+String(gps.time.second());
-        if (gps.time.hour() < 10)
-            if (gps.time.minute() < 10)
-                if (gps.time.second() < 10)
-                {
-                    String time_val = String(gps.time.hour())+":"+String(gps.time.minute())+":"+String(gps.time.second());
-                    print_lcd("Time:", 6);
-                    print_lcd(time_val, 7);
-                }
+        if (value.containsKey("minute"))
+        {
+            if (value.containsKey("second"))
+            {
+                print_lcd("Time:", 6);
+                String time_val = String(value["hour"])+":"+String(value["minute"])+":"+String(value["second"]);
+                print_lcd(time_val, 7);
+            }
+        }
     }
 }

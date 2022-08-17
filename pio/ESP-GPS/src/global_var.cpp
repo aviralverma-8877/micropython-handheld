@@ -11,4 +11,3 @@ IPAddress apSubnet(255, 255, 255, 0);
 AsyncWebServer server(80);
 DNSServer dnsServer;
 AsyncWebSocket webSocket("/ws");
-TinyGPSPlus gps;

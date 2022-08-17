@@ -1,15 +1,15 @@
 #include <ArduinoJson.h>
 #include <bb_hx1230.h>
+#include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
 
 const byte rxPin = 4;
 const byte txPin = 11;
 
 String serialData;
-String gpsData;
-
 byte lastPin = 0;
 
+TinyGPSPlus gps;
 DynamicJsonDocument jsonBuffer(500);
 SoftwareSerial GPS_serial(rxPin, txPin); // RX, TX
 
@@ -42,26 +42,31 @@ void setup() {
   pinMode(BTN5, INPUT);
 }
 
+void displayGPSInfo()
+{
+  jsonBuffer.clear();
+  jsonBuffer["action"] = "gps_data";
+  JsonObject val  = jsonBuffer.createNestedObject("value");
+  val["lat"] = String(gps.location.lat());
+  val["lng"] = String(gps.location.lng());
+  val["day"] = String(gps.date.day());
+  val["month"] = String(gps.date.month());
+  val["year"] = String(gps.date.year());
+  val["hour"] = String(gps.time.hour());
+  val["minute"] = String(gps.time.minute());
+  val["second"] = String(gps.time.second());
+  serializeJson(jsonBuffer, Serial);
+  Serial.println();
+}
 void gps_data()
 {
   if(GPS_serial.available())
   {
-    while(GPS_serial.available()){GPS_serial.read();}
+    while(GPS_serial.available())
+    {
+      gps.encode(GPS_serial.read());
+    }
   }
-  while(!GPS_serial.available()){;}
-  delay(10);
-  gpsData = "";
-  jsonBuffer.clear();
-  jsonBuffer["action"] = "gps_data";
-  while(GPS_serial.available())
-  {
-    gpsData = GPS_serial.readString();
-    gpsData.trim();
-  }
-  jsonBuffer["value"] = gpsData;
-  serializeJson(jsonBuffer, Serial);
-  Serial.println();
-  while(GPS_serial.available()){GPS_serial.read();}
 }
 
 void serial_check()
@@ -88,6 +93,10 @@ void serial_check()
       }
     }
     controller(command);
+  }
+  else
+  {
+    gps_data();
   }
 }
 
@@ -126,7 +135,7 @@ void controller(String command)
         }
         break;
       case 4:
-        gps_data();
+        displayGPSInfo();
         break;
       default:
         clearLCD();
