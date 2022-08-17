@@ -47,14 +47,14 @@ void displayGPSInfo()
   jsonBuffer.clear();
   jsonBuffer["action"] = "gps_data";
   JsonObject val  = jsonBuffer.createNestedObject("value");
-  val["lat"] = String(gps.location.lat());
-  val["lng"] = String(gps.location.lng());
-  val["day"] = String(gps.date.day());
-  val["month"] = String(gps.date.month());
-  val["year"] = String(gps.date.year());
-  val["hour"] = String(gps.time.hour());
-  val["minute"] = String(gps.time.minute());
-  val["second"] = String(gps.time.second());
+  val["la"] = String(gps.location.lat());
+  val["ln"] = String(gps.location.lng());
+  val["d"] = String(gps.date.day());
+  val["m"] = String(gps.date.month());
+  val["y"] = String(gps.date.year());
+  val["h"] = String(gps.time.hour());
+  val["mi"] = String(gps.time.minute());
+  val["s"] = String(gps.time.second());
   serializeJson(jsonBuffer, Serial);
   Serial.println();
 }

@@ -4,23 +4,25 @@ void process_nmea(DynamicJsonDocument value)
 {
     clear_lcd();
     print_lcd("GPS Data",0);
-    if (value.containsKey("lat"))
+    String msg ;
+    serializeJson(value,msg);
+    if (value.containsKey("la"))
     {
-        if (value.containsKey("lng"))
+        if (value.containsKey("ln"))
         {
             print_lcd("Location:", 1);
-            print_lcd("Lat : "+String(value["lat"]), 2);
-            print_lcd("Lng : "+String(value["lng"]), 3);
+            print_lcd("Lat : "+String(value["la"]), 2);
+            print_lcd("Lng : "+String(value["ln"]), 3);
         }
     }
 
-    if (value.containsKey("day"))
+    if (value.containsKey("d"))
     {
-        if (value.containsKey("month"))
+        if (value.containsKey("m"))
         {
-            if (value.containsKey("year"))
+            if (value.containsKey("y"))
             {
-                String date_val = String(value["day"])+"/"+String(value["month"])+"/"+String(value["year"]);
+                String date_val = String(value["d"])+"/"+String(value["m"])+"/"+String(value["y"]);
                 print_lcd("Date:", 4);
                 print_lcd(date_val, 5);
             }
@@ -28,14 +30,14 @@ void process_nmea(DynamicJsonDocument value)
     }
 
 
-    if (value.containsKey("hour"))
+    if (value.containsKey("h"))
     {
-        if (value.containsKey("minute"))
+        if (value.containsKey("mi"))
         {
-            if (value.containsKey("second"))
+            if (value.containsKey("s"))
             {
                 print_lcd("Time:", 6);
-                String time_val = String(value["hour"])+":"+String(value["minute"])+":"+String(value["second"]);
+                String time_val = String(value["h"])+":"+String(value["mi"])+":"+String(value["s"]);
                 print_lcd(time_val, 7);
             }
         }

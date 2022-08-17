@@ -52,6 +52,7 @@ void read_serial_inputs()
             print_debug("ERROR",error.c_str());
             return;
         }
+        notifyClients(serial_data);
         if(doc.containsKey("action"))
         {
             if(doc.containsKey("value"))
@@ -203,12 +204,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
                     WiFi.begin(ssid,psk);
                     WiFi.setAutoReconnect(true);
                     WiFi.persistent(true);
-                    DynamicJsonDocument res(100);
-                    res["action"] = "alret";
-                    res["msg"] = "WiFi switched to "+ssid;
-                    String msg;
-                    serializeJsonPretty(res, msg);
-                    notifyClients(msg);
+                    
                 }
                 else
                     return;

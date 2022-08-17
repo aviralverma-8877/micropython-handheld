@@ -10,6 +10,22 @@ function init_socket()
             {
                 alert(json.msg)
             }
+            if(json.action == "gps_data")
+            {
+                gps_data = json.value;
+                document.getElementById("gps_lat").innerHTML=gps_data.la
+                document.getElementById("gps_lng").innerHTML=gps_data.ln
+                
+                gps_link = "https://maps.google.com/?q="+gps_data.la+","+gps_data.ln
+                document.getElementById("gps_link").innerHTML=gps_link
+                document.getElementById("gps_link").href = gps_link
+
+                gps_time = gps_data.h + ":" + gps_data.mi + ":" + gps_data.s
+                document.getElementById("gps_time").innerHTML=gps_time
+                
+                gps_date = gps_data.d + "/" + gps_data.m + "/" + gps_data.y
+                document.getElementById("gps_date").innerHTML=gps_date
+            }
         }
         catch(err)
         {
@@ -40,4 +56,5 @@ function send(data)
 function send_wifi_cred(ssid, psk)
 {
     send(JSON.stringify({"action":"wifi_update","ssid":wifi_ssid.value,"psk":wifi_psk.value}))
+    alert("WiFi updated")
 }
