@@ -54,17 +54,15 @@ void print_intro()
 {
     set_lcd_contrast(5);
     clear_lcd();
-    print_lcd("Hello World", 0);
-    print_lcd("Welcome To", 1);
-    print_lcd("Neo 6M", 2);
-    print_lcd("WiFi Status", 3);
+    print_lcd("Neo 6M", 0);
+    print_lcd("WiFi", 1);
     if(WiFi.status() == WL_CONNECTED)
     {
-        print_lcd("Connected", 4);
-        print_lcd(WiFi.localIP().toString(),5);
+        print_lcd("Connected", 2);
+        print_lcd(WiFi.localIP().toString(),3);
     }
     else{
-        print_lcd("Disonnected", 4);
+        print_lcd("Disonnected", 2);
     }
     alert_lcd();
     Serial.flush();

@@ -80,7 +80,7 @@ void serial_check()
     }
     serialData.trim();
     String command = "";
-    for(int i=0; i<serialData.length(); i++)
+    for(int i=0; i<=serialData.length(); i++)
     {
       if(serialData[i] == '\n')
       {
@@ -89,7 +89,8 @@ void serial_check()
       }
       else
       {
-        command += serialData[i];
+        if(serialData[i] != '\r')
+          command += serialData[i];
       }
     }
     controller(command);
@@ -105,8 +106,9 @@ void controller(String command)
   jsonBuffer.clear();
   DeserializationError error = deserializeJson(jsonBuffer, command);
   if (error) {
+    Serial.print(command);
     return;
-  }  
+  }
   if(jsonBuffer.containsKey("c"))
   {
     int cmd;

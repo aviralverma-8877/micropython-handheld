@@ -3,16 +3,14 @@
 void process_nmea(DynamicJsonDocument value)
 {
     clear_lcd();
-    print_lcd("GPS Data",0);
     String msg ;
     serializeJson(value,msg);
     if (value.containsKey("la"))
     {
         if (value.containsKey("ln"))
         {
-            print_lcd("Location:", 1);
-            print_lcd("Lat : "+String(value["la"]), 2);
-            print_lcd("Lng : "+String(value["ln"]), 3);
+            print_lcd("Location:", 0);
+            print_lcd(String(value["la"])+", "+String(value["ln"]), 1);
         }
     }
 
@@ -23,8 +21,8 @@ void process_nmea(DynamicJsonDocument value)
             if (value.containsKey("y"))
             {
                 String date_val = String(value["d"])+"/"+String(value["m"])+"/"+String(value["y"]);
-                print_lcd("Date:", 4);
-                print_lcd(date_val, 5);
+                print_lcd("Date:", 3);
+                print_lcd(date_val, 4);
             }
         }
     }

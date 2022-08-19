@@ -7,6 +7,7 @@ void setup() {
   
   handle_wifi();
   setup_web_server();
+  delay(1000);
 
   print_debug("DEBUG","Ready");
   print_intro();
