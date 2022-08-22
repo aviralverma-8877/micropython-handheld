@@ -29,10 +29,22 @@ void top_left(String value)
 
 void top_right(String value)
 {
-    enable_ap();
-    clear_lcd();
-    print_lcd("AP Enabled",1);
-    print_debug("DEBUG","top_right");
+    if(!ap_enabled)
+    {
+        ap_enabled = true;
+        enable_ap();
+        clear_lcd();
+        print_lcd("AP Enabled",1);
+        print_debug("DEBUG","top_right");
+    }
+    else
+    {
+        ap_enabled = false;
+        disable_ap();
+        clear_lcd();
+        print_lcd("AP Disabled",1);
+        print_debug("DEBUG","top_right");
+    }
 }
 
 void bottom_left(String value)

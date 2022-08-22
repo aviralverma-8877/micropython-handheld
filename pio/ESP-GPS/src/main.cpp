@@ -6,6 +6,7 @@ void setup() {
   Serial.setTimeout(10);
   
   handle_wifi();
+  disable_ap();
   setup_web_server();
   delay(1000);
 

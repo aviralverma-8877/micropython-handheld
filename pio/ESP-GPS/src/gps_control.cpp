@@ -8,7 +8,7 @@ void process_nmea(DynamicJsonDocument value)
         if(gps_record){
             String data;
             serializeJson(value, data);
-            gps_record.println(data);
+            gps_record.println(data+"\n");
         }
         gps_record.close();
     }

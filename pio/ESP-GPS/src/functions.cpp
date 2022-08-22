@@ -122,6 +122,13 @@ void onWifiDisconnect(const WiFiEventStationModeDisconnected& event)
 
 }
 
+void disable_ap()
+{
+  print_debug("DEBUG","Disabling AP");
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+}
+
 void enable_ap()
 {
   print_debug("DEBUG","Enabling AP");

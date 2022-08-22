@@ -3,6 +3,7 @@
 Ticker TickerForGPS;
 bool debug_mode = false;
 bool gps_recording = false;
+bool ap_enabled = false;
 WiFiEventHandler wifiConnectHandler;
 WiFiEventHandler wifiDisconnectHandler;
 IPAddress apIP(192, 168, 4, 1);

@@ -54,16 +54,8 @@ void print_intro()
 {
     set_lcd_contrast(5);
     clear_lcd();
-    print_lcd("Neo 6M", 0);
-    print_lcd("WiFi", 1);
-    if(WiFi.status() == WL_CONNECTED)
-    {
-        print_lcd("Connected", 2);
-        print_lcd(WiFi.localIP().toString(),3);
-    }
-    else{
-        print_lcd("Disonnected", 2);
-    }
+    print_lcd("    Neo 6M", 3);
+    print_lcd("   Tracker", 4);
     alert_lcd();
     Serial.flush();
 }

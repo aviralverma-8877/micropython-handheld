@@ -18,6 +18,7 @@
     extern Ticker TickerForGPS;
     extern bool debug_mode;
     extern bool gps_recording;
+    extern bool ap_enabled;
     extern WiFiEventHandler wifiConnectHandler;
     extern WiFiEventHandler wifiDisconnectHandler;
     extern IPAddress apIP;

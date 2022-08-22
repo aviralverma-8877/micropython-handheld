@@ -7,6 +7,7 @@
     void handle_wifi();
     void onWifiConnect(const WiFiEventStationModeGotIP& event);
     void onWifiDisconnect(const WiFiEventStationModeDisconnected& event);
+    void disable_ap();
     void enable_ap();
     void setup_web_server();
     void initWebSocket();
