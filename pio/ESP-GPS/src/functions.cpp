@@ -154,6 +154,7 @@ void setup_web_server()
         index.close();
     });
     server.serveStatic("/script.js", SPIFFS, "/script.js");
+    server.serveStatic("/track.txt", SPIFFS, "/track.txt");
     initWebSocket();
     server.addHandler(new CaptiveRequestHandler()).setFilter(ON_AP_FILTER);
     server.begin();

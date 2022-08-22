@@ -8,6 +8,7 @@
     #include <ESPAsyncTCP.h>
     #include <ESPAsyncWebServer.h>
     #include <ESP8266mDNS.h> 
+    #include "FS.h"
 
     #include "functions.h"
     #include "button_control.h"

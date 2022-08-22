@@ -2,6 +2,16 @@
 
 void process_nmea(DynamicJsonDocument value)
 {
+    if(gps_recording)
+    {
+        File gps_record = SPIFFS.open("/track.txt", "a");
+        if(gps_record){
+            String data;
+            serializeJson(value, data);
+            gps_record.println(data);
+        }
+        gps_record.close();
+    }
     clear_lcd();
     String msg ;
     serializeJson(value,msg);

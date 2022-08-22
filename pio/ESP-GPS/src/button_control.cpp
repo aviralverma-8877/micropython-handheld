@@ -8,13 +8,21 @@ void top_left(String value)
     {
         TickerForGPS.detach();
         gps_recording = false;
-        print_lcd("Auto GPS",0);
+        print_lcd("Record GPS",0);
         print_lcd("OFF",1);
     }
     else{
+        File gps_record = SPIFFS.open("/track.txt", "w");
+        if(gps_record){
+            if(gps_record.println("")){
+                print_lcd("track.txt", 3);
+                print_lcd("Cleared", 4);
+            }
+            gps_record.close();
+        }
         TickerForGPS.attach(5, get_gps_data);
         gps_recording = true;
-        print_lcd("Auto GPS",0);
+        print_lcd("Record GPS",0);
         print_lcd("ON",1);        
     }
 }
